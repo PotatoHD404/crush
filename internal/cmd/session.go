@@ -116,7 +116,7 @@ func sessionSetup(cmd *cobra.Command) (context.Context, *sessionServices, func()
 		dataDir = cfg.Config().Options.DataDirectory
 	}
 	if shouldEnableMetrics(cfg.Config()) {
-		event.Init()
+		event.Init(config.AnalyticsURL)
 	}
 
 	conn, err := db.Connect(ctx, dataDir)

@@ -14,8 +14,9 @@ import (
 )
 
 const (
-	endpoint = "https://data.charm.land"
-	key      = "phc_4zt4VgDWLqbYnJYEwLRxFoaTL2noNrQij0C6E8k3I0V"
+	// Locked build: the analytics endpoint is supplied at build time and passed into
+	// Init. There is no hardcoded charm.land endpoint and telemetry is off by default.
+	key = "phc_4zt4VgDWLqbYnJYEwLRxFoaTL2noNrQij0C6E8k3I0V"
 
 	nonInteractiveAttrName      = "NonInteractive"
 	continueSessionByIDAttrName = "ContinueSessionByID"
@@ -47,7 +48,12 @@ func SetContinueLastSession(continueLastSession bool) {
 	baseProps = baseProps.Set(continueLastSessionAttrName, continueLastSession)
 }
 
-func Init() {
+func Init(endpoint string) {
+	if endpoint == "" {
+		// Locked build: no analytics endpoint configured at build time → telemetry stays
+		// off (client remains nil, so all send/Error/Alias/Flush calls are no-ops).
+		return
+	}
 	c, err := posthog.NewWithConfig(key, posthog.Config{
 		Endpoint:        endpoint,
 		Logger:          logger{},

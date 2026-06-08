@@ -18,10 +18,15 @@ import (
 
 	"github.com/charmbracelet/crush/internal/cmd"
 	_ "github.com/charmbracelet/crush/internal/dns"
+	"github.com/charmbracelet/crush/internal/netguard"
 	_ "github.com/joho/godotenv/autoload"
 )
 
 func main() {
+	// Lock all outbound network access to the allowlist (custom model endpoint + optional
+	// analytics + loopback) before anything else can make a request.
+	netguard.Install()
+
 	if os.Getenv("CRUSH_PROFILE") != "" {
 		go func() {
 			slog.Info("Serving pprof at localhost:6060")

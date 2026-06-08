@@ -309,7 +309,7 @@ func setupLocalWorkspace(cmd *cobra.Command) (workspace.Workspace, func(), error
 	}
 
 	if shouldEnableMetrics(cfg) {
-		event.Init()
+		event.Init(config.AnalyticsURL)
 	}
 
 	ws := workspace.NewAppWorkspace(appInstance, store)
@@ -399,7 +399,7 @@ func connectToServer(cmd *cobra.Command) (*client.Client, *proto.Workspace, func
 	}
 
 	if shouldEnableMetrics(ws.Config) {
-		event.Init()
+		event.Init(config.AnalyticsURL)
 	}
 
 	if ws.Config != nil {
